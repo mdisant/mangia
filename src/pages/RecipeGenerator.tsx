@@ -25,8 +25,26 @@ const RecipeGenerator: React.FC = () => {
     e.preventDefault();
     dispatch(updatePreferences({ diet: formData.diet, allergies: [] }));
     const recipe = await generateRecipe(formData);
-    setGeneratedRecipe(recipe);
-    dispatch(addRecipe(recipe));
+    const completeRecipe: Recipe = {
+      ...recipe,
+      id: recipe.id || Math.random().toString(36).substr(2, 9),
+      title: recipe.title || '',
+      description: recipe.description || '',
+      imageUrl: recipe.imageUrl || '',
+      ingredients: recipe.ingredients || [],
+      instructions: recipe.instructions || [],
+      cookingTime: recipe.cookingTime || 30,
+      servings: recipe.servings || 4,
+      difficulty: recipe.difficulty || 'medium',
+      cuisine: recipe.cuisine || '',
+      tags: recipe.tags || [],
+      authorId: user?.id || 'anonymous',
+      createdAt: new Date(),
+      likes: 0,
+      isAIGenerated: true
+    };
+    setGeneratedRecipe(completeRecipe);
+    dispatch(addRecipe(completeRecipe));
   };
 
   return (

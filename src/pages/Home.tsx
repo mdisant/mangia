@@ -1,38 +1,69 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchRecipes } from '../redux/slices/recipeSlice';
-import RecipeCard from '../components/RecipeCard';
-import FilterBar from '../components/FilterBar';
-import styled from 'styled-components';
-import { RootState } from '../redux/store';
-import { Recipe } from '../types';
-
-const FeedContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-`;
+import React from 'react';
+import {
+  Box,
+  Heading,
+  Text,
+  Container,
+  Button,
+} from '@chakra-ui/react';
+import { VStack, SimpleGrid } from '@chakra-ui/layout';
+import RecipeCard from '../components/recipe/RecipeCard';
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
-  const { recipes, loading, error } = useSelector((state: RootState) => state.recipes);
-
-  useEffect(() => {
-    dispatch(fetchRecipes() as any); // Type assertion to bypass thunk typing for simplicity
-  }, [dispatch]);
+  // This will be replaced with actual data from Firebase
+  const mockRecipes = [
+    {
+      id: '1',
+      title: 'Spaghetti Carbonara',
+      description: 'Classic Italian pasta dish with eggs, cheese, and pancetta',
+      imageUrl: 'https://via.placeholder.com/300',
+      cookingTime: 30,
+      difficulty: 'medium',
+      likes: 150,
+    },
+    {
+      id: '2',
+      title: 'Chicken Tikka Masala',
+      description: 'Creamy and spicy Indian curry with tender chicken',
+      imageUrl: 'https://via.placeholder.com/300',
+      cookingTime: 45,
+      difficulty: 'medium',
+      likes: 200,
+    },
+    // Add more mock recipes as needed
+  ];
 
   return (
-    <div>
-      <h1>Mangia Home</h1>
-      <FilterBar />
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-      <FeedContainer>
-        {recipes.map((recipe: Recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
-      </FeedContainer>
-    </div>
+    <Container maxW="container.xl">
+      <VStack spacing={8} align="stretch">
+        <Box>
+          <Heading mb={4}>Trending Recipes</Heading>
+          <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+            {mockRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </SimpleGrid>
+        </Box>
+
+        <Box>
+          <Heading mb={4}>Personalized Picks</Heading>
+          <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+            {mockRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </SimpleGrid>
+        </Box>
+
+        <Box>
+          <Heading mb={4}>Seasonal Specials</Heading>
+          <SimpleGrid columns={[1, 2, 3]} spacing={6}>
+            {mockRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </SimpleGrid>
+        </Box>
+      </VStack>
+    </Container>
   );
 };
 

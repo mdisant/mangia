@@ -1,39 +1,45 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Recipe } from '../../types';
-import { fetchRecipesFromAPI } from '../../utils/api';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export const fetchRecipes = createAsyncThunk('recipes/fetchRecipes', async () => {
-  const response = await fetchRecipesFromAPI();
-  return response;
-});
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  cookingTime: number;
+  difficulty: string;
+  likes: number;
+}
+
+interface RecipeState {
+  recipes: Recipe[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: RecipeState = {
+  recipes: [],
+  loading: false,
+  error: null,
+};
 
 const recipeSlice = createSlice({
   name: 'recipes',
-  initialState: {
-    recipes: [] as Recipe[],
-    loading: false,
-    error: null as string | null,
-  },
+  initialState,
   reducers: {
-    addRecipe: (state, action) => {
+    setRecipes: (state, action: PayloadAction<Recipe[]>) => {
+      state.recipes = action.payload;
+    },
+    addRecipe: (state, action: PayloadAction<Recipe>) => {
       state.recipes.push(action.payload);
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchRecipes.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchRecipes.fulfilled, (state, action) => {
-        state.recipes = action.payload;
-        state.loading = false;
-      })
-      .addCase(fetchRecipes.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch recipes';
-      });
+    updateRecipe: (state, action: PayloadAction<Recipe>) => {
+      const index = state.recipes.findIndex(recipe => recipe.id === action.payload.id);
+      if (index !== -1) {
+        state.recipes[index] = action.payload;
+      }
+    },
   },
 });
 
-export const { addRecipe } = recipeSlice.actions;
+export const { setRecipes, addRecipe, updateRecipe } = recipeSlice.actions;
 export default recipeSlice.reducer;

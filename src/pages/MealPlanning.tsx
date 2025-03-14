@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 import { Recipe } from '../types';
 import styled from 'styled-components';
+
+interface RootState {
+  recipes: {
+    recipes: Recipe[];
+  };
+}
 
 const PlannerGrid = styled.div`
   display: grid;
